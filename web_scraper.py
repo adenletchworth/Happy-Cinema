@@ -2,6 +2,7 @@ import re
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
+import time
 
 class MovieScraper:
     def __init__(self, url):
@@ -58,10 +59,13 @@ class UrlFinder:
 
         for url in url_List:
             self.url_Ending.add(url['href'])
+            time.sleep(1)
    
-url = 'https://www.rottentomatoes.com/browse/movies_at_home/?page=1'
+url1 = 'https://www.rottentomatoes.com/browse/movies_at_home/?page=100'
+url2 = 'https://www.rottentomatoes.com/browse/movies_in_theaters/?page=100'
+url3 = 'https://www.rottentomatoes.com/browse/movies_coming_soon/'
 
-urls = UrlFinder(url)
+urls = UrlFinder(url3)
 
 url_Set = urls.get_movie_url()
 
@@ -81,7 +85,7 @@ for url_end in urls.url_Ending:
     # Append the values to the corresponding columns
     df = df._append(movie_attributes, ignore_index=True)
 
-df.to_csv('movies.csv', index=False)
+#df.to_csv('movies.csv', index=False)
 
 
 
