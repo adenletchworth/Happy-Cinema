@@ -3,8 +3,6 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 
-df = pd.DataFrame()
-
 class MovieScraper:
     def __init__(self, url):
         self.url = url
@@ -65,7 +63,7 @@ urls = UrlFinder(url)
 
 url_Set = urls.get_movie_url()
 
-data = []
+df = pd.DataFrame()
 
 for url_end in urls.url_Ending:
     url = 'https://www.rottentomatoes.com' + url_end
