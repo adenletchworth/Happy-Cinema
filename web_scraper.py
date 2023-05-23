@@ -1,14 +1,16 @@
 import re
 from bs4 import BeautifulSoup
 import requests
+import pandas as pd
 
+df = pd.DataFrame()
 
 class MovieScraper:
     def __init__(self, url):
         self.url = url
         self.movie_attributes = {}
 
-    def get_movie_attributes(self):
+    def find_movie_attributes(self):
 
         # connect to the url
         movie_Scrape = requests.get(self.url)
@@ -32,6 +34,7 @@ class MovieScraper:
             label_text = label.text.replace(':','').strip()
             attribute_text = re.sub(r'\s+', ' ', attribute.text.strip())
             self.movie_attributes[label_text] = attribute_text
+
 
     def print_movie_attributes(self):
         for label, attribute in self.movie_attributes.items():
@@ -62,14 +65,23 @@ urls = UrlFinder(url)
 
 url_Set = urls.get_movie_url()
 
+data = []
+
 for url_end in urls.url_Ending:
-    url = 'https://www.rottentomatoes.com'
+    url = 'https://www.rottentomatoes.com' + url_end
+    scrape = MovieScraper(url)
+    scrape.find_movie_attributes()
+    movie_attributes = scrape.movie_attributes
 
-    scrape = MovieScraper(url+url_end)
+    # Add the keys to the columns list if not already present
+    for key in movie_attributes.keys():
+        if key not in df.columns:
+            df[key] = ""
 
-    scrape.get_movie_attributes()
+    # Append the values to the corresponding columns
+    df = df._append(movie_attributes, ignore_index=True)
 
-    scrape.print_movie_attributes()
+df.to_csv('movies.csv', index=False)
 
 
 
