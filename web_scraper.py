@@ -22,6 +22,9 @@ class MovieScraper:
         # get the conent we are interested in
         movie_attributes_r = soup.find_all('span', class_='info-item-value')
         movie_labels_r = soup.find_all('b', class_='info-item-label')
+        movie_name_r = soup.find('h1',class_='title')
+
+        self.movie_attributes['Title'] = movie_name_r.text
 
         # forms text and adds to movie_attributes list
         for label, attribute in zip(movie_labels_r, movie_attributes_r):
@@ -51,7 +54,7 @@ class UrlFinder:
 
         for url in url_List:
             self.url_Ending.add(url['href'])
-
+   
 url = 'https://www.rottentomatoes.com/browse/movies_at_home/?page=1'
 
 urls = UrlFinder(url)
