@@ -33,13 +33,40 @@ class MovieScraper:
         for label, attribute in self.movie_attributes.items():
             print(f"{label}: {attribute}")
 
+class UrlFinder:
+    def __init__(self,movie_url_page):
+        self.movie_url_page = movie_url_page
+
+    def get_movie_url(self):
+
+        url_Scrape = requests.get(self.movie_url_page)
+
+        url_Text = url_Scrape.content
 
 
+        soup = BeautifulSoup(url_Text,'lxml')
 
-url = 'https://www.rottentomatoes.com/m/dark_nature_2022'
+        url_List = soup.find_all('a',{'data-track':'scores'})
+
+        for url in url_List:
+            print(url['href'])
+
+url = 'https://www.rottentomatoes.com/browse/movies_at_home/'
+
+urls = UrlFinder(url)
+
+urls.get_movie_url()
+
+        
+""""
+url = 'https://www.rottentomatoes.com/m/virgin_suicides'
 
 scrape = MovieScraper(url)
 
 scrape.get_movie_attributes()
 
 scrape.print_movie_attributes()
+
+"""
+
+
