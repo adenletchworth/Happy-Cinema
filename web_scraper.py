@@ -24,6 +24,7 @@ class MovieScraper:
         movie_labels_r = soup.find_all('b', class_='info-item-label')
         movie_name_r = soup.find('h1',class_='title')
 
+        self.movie_attributes['URL'] = self.url
         self.movie_attributes['Title'] = movie_name_r.text
 
         # forms text and adds to movie_attributes list
