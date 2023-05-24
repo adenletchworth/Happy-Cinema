@@ -65,7 +65,7 @@ url1 = 'https://www.rottentomatoes.com/browse/movies_at_home/?page=100'
 url2 = 'https://www.rottentomatoes.com/browse/movies_in_theaters/?page=100'
 url3 = 'https://www.rottentomatoes.com/browse/movies_coming_soon/'
 
-urls = UrlFinder(url3)
+urls = UrlFinder(url1)
 
 url_Set = urls.get_movie_url()
 
@@ -85,7 +85,7 @@ for url_end in urls.url_Ending:
     # Append the values to the corresponding columns
     df = df._append(movie_attributes, ignore_index=True)
 
-#df.to_csv('movies.csv', index=False)
+df.to_csv('movies_in_home.csv', index=False)
 
 
 
