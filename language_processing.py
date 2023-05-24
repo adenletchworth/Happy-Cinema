@@ -1,7 +1,9 @@
 from nltk.tokenize import word_tokenize,sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
+import nltk
 import pandas as pd
+import matplotlib.pyplot as plt
 
 full_movie_data = pd.read_csv('movies_combined.csv')
 
@@ -15,6 +17,10 @@ ps = PorterStemmer()
 
 stemmed_words = [ps.stem(word) for word in words]
 
-filtered_words = [word for word in words if not word in stop_words]
+filtered_words = [word for word in stemmed_words if not word in stop_words]
 
-print(filtered_words)
+tagged = nltk.pos_tag(words)
+chunked_words = nltk.ne_chunk(tagged,binary=True)
+
+chunked_words.draw()
+ 
