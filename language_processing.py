@@ -1,30 +1,46 @@
-from nltk.tokenize import word_tokenize,sent_tokenize
-from nltk.corpus import stopwords, wordnet
-from nltk.stem import PorterStemmer, WordNetLemmatizer
-import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 import pandas as pd
-import matplotlib.pyplot as plt
+import spacy
 
-full_movie_data = pd.read_csv('movies_combined.csv')
+def processInput(user_input: str):
+    full_movie_data = pd.read_csv('movies_combined.csv')
 
-description_df = full_movie_data['Description']
+    description_df = full_movie_data['Description']
+    title_df = full_movie_data['Title']
 
-stop_words = set(stopwords.words('english'))
+    stop_words = set(stopwords.words('english'))
 
-words = word_tokenize(description_df[0])
+    lz = WordNetLemmatizer()
 
-lz = WordNetLemmatizer()
+    input_tokens = word_tokenize(user_input)
+    input_words = [lz.lemmatize(word.lower()) for word in input_tokens if word.lower() not in stop_words]
 
-tagged = nltk.pos_tag(words)
-chunked_words = nltk.ne_chunk(tagged,binary=True)
+    nlp = spacy.load('en_core_web_lg')
 
-all_words = []
+    input_ = nlp(" ".join(input_words))  # Convert input_words to string before passing to nlp
 
-for sentence in description_df:
-    words = word_tokenize(sentence)
-    for word in words:
-        if word not in stop_words:
-            all_words.append(lz.lemmatize(word.lower()))
- 
-print(nltk.FreqDist(all_words).most_common(20))
+    max_similarity = 0
+    similar_title = ""
+    similar_description = ""
+
+    clean_description_df = description_df.str.replace('\n', '').str.strip()
+
+    for title, description in zip(title_df, clean_description_df):
+        description_tokens = word_tokenize(description)
+        description_words = [lz.lemmatize(word.lower()) for word in description_tokens if word.lower() not in stop_words]
+        description_text = " ".join(description_words)
+        description_ = nlp(description_text)
+        similarity = input_.similarity(description_)
+        if similarity > max_similarity:
+            max_similarity = similarity
+            similar_title = title
+            similar_description = description
+
+    return max_similarity, similar_title, similar_description
+
+process = processInput('Mystery with lots of murder')
+print(process)
+
 
