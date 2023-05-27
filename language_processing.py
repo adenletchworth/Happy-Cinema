@@ -2,13 +2,15 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 import pandas as pd
-import spacy
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
 
 def processInput(user_input: str):
     full_movie_data = pd.read_csv('movies_combined.csv')
 
     description_df = full_movie_data['Description']
     title_df = full_movie_data['Title']
+    genre_df = full_movie_data['Genre']
 
     stop_words = set(stopwords.words('english'))
 
@@ -17,30 +19,38 @@ def processInput(user_input: str):
     input_tokens = word_tokenize(user_input)
     input_words = [lz.lemmatize(word.lower()) for word in input_tokens if word.lower() not in stop_words]
 
-    nlp = spacy.load('en_core_web_lg')
+    # Encode movie descriptions and user input
+    encoded_descriptions = model.encode(description_df)
+    encoded_user_input = model.encode([' '.join(input_words)])
 
-    input_ = nlp(" ".join(input_words))  # Convert input_words to string before passing to nlp
+    # Calculate cosine similarity
+    similarity_scores = cosine_similarity(encoded_descriptions, encoded_user_input)
 
-    max_similarity = 0
-    similar_title = ""
-    similar_description = ""
+    # Calculate weights
+    description_weight = 0.6
+    genre_weight = 0.4
 
-    clean_description_df = description_df.str.replace('\n', '').str.strip()
+    # Calculate weighted similarity scores
+    weighted_scores = description_weight * similarity_scores
 
-    for title, description in zip(title_df, clean_description_df):
-        description_tokens = word_tokenize(description)
-        description_words = [lz.lemmatize(word.lower()) for word in description_tokens if word.lower() not in stop_words]
-        description_text = " ".join(description_words)
-        description_ = nlp(description_text)
-        similarity = input_.similarity(description_)
-        if similarity > max_similarity:
-            max_similarity = similarity
-            similar_title = title
-            similar_description = description
+    # Sort movies based on weighted similarity scores
+    sorted_indices = weighted_scores.argsort(axis=0)[::-1].flatten()
 
-    return max_similarity, similar_title, similar_description
+    # Find the most similar movie with the highest score
+    most_similar_index = sorted_indices[0]
 
-process = processInput('Mystery with lots of murder')
-print(process)
+    # Get the most similar movie title, description, and genre
+    most_similar_movie_title = title_df[most_similar_index]
+    most_similar_movie_description = description_df[most_similar_index].strip()
+    most_similar_movie_genre = genre_df[most_similar_index]
 
+    return most_similar_movie_title, most_similar_movie_description, most_similar_movie_genre
 
+# Load the pre-trained model for encoding text
+model = SentenceTransformer('bert-base-nli-mean-tokens')
+
+user_input = 'I want a psychological thriller with a female lead'
+most_similar_movie_title, most_similar_movie_description, most_similar_movie_genre = processInput(user_input)
+print("Title:", most_similar_movie_title)
+print("Description:", most_similar_movie_description)
+print("Genre:", most_similar_movie_genre)
