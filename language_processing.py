@@ -40,8 +40,8 @@ def processInput(user_description: str, user_genre: str):
     similarity_genre_scores = cosine_similarity(encoded_genres, encoded_user_genre)
 
     # Assign weights
-    description_weight = .7
-    genre_weight = .3
+    description_weight = .6
+    genre_weight = .4
 
     # Calculate weighted similarity scores
     weighted_scores = (description_weight * similarity_description_scores) + (genre_weight * similarity_genre_scores)
@@ -59,8 +59,8 @@ def processInput(user_description: str, user_genre: str):
 
     return most_similar_movie_titles, most_similar_movie_descriptions, most_similar_movie_genres
 
-user_input = 'I want a happy movie with a good ending'
-user_genre = 'Horror'
+user_input = 'While exploring her new home, a girl named Coraline (Dakota Fanning) discovers a secret door, behind which lies an alternate world that closely mirrors her own but, in many ways, is better. She rejoices in her discovery, until Other Mother (Teri Hatcher) and the rest of her parallel family try to keep her there forever. Coraline must use all her resources and bravery to make it back to her own family and life.'
+user_genre = 'Kids & family, Fantasy, Animation'
 
 most_similar_movie_titles, most_similar_movie_descriptions, most_similar_movie_genres = processInput(user_input, user_genre)
 
@@ -71,3 +71,5 @@ for title,description,genre in most_similar_results:
     print("Description:", description)
     print("Genre:", genre)
     print()
+
+
