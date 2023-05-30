@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 import time
+from nltk.tokenize import word_tokenize
 
 class MovieScraper:
     def __init__(self, url):
@@ -46,7 +47,7 @@ class UrlFinder:
         self.movie_url_page = movie_url_page
         self.url_Ending = set()
 
-    def get_movie_url(self):
+    def __getitem__(self):
 
         url_Scrape = requests.get(self.movie_url_page)
 
@@ -60,14 +61,22 @@ class UrlFinder:
         for url in url_List:
             self.url_Ending.add(url['href'])
             time.sleep(1)
-   
+
+def UrlPredictor(title_input):
+    title = word_tokenize(title_input)
+    filtered_title = [word.lower() for word in title if word.isalpha()]
+    url = '_'.join(filtered_title)
+    return url
+
+
+""""
 url1 = 'https://www.rottentomatoes.com/browse/movies_at_home/?page=100'
 url2 = 'https://www.rottentomatoes.com/browse/movies_in_theaters/?page=100'
 url3 = 'https://www.rottentomatoes.com/browse/movies_coming_soon/'
 
 urls = UrlFinder(url1)
 
-url_Set = urls.get_movie_url()
+url_Set = urls.get()
 
 df = pd.DataFrame()
 
@@ -86,6 +95,11 @@ for url_end in urls.url_Ending:
     df = df._append(movie_attributes, ignore_index=True)
 
 df.to_csv('movies_in_home.csv', index=False)
+"""
+
+
+
+
 
 
 
