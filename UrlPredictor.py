@@ -1,21 +1,26 @@
-
 import numpy as np
 from nltk.tokenize import word_tokenize
 import pandas as pd
 import tensorflow as tf
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.layers import Input, LSTM, Dense
+from keras.utils import pad_sequences
+from keras.preprocessing.text import Tokenizer
+
 
 class Url_Generator:
     def __init__(self,title_input):
-        self.title_input = word_tokenize(title_input)
-    
-    def __len__(self):
-        return len(self.title_input)
+        tokenizer = Tokenizer()
+        tokenizer.fit_on_texts(title_input)
+        title_sequences = tokenizer.texts_to_sequences(title_input)
+        title_input_seq = pad_sequences(title_sequences, padding='post')
+        self.title_input_seq = title_input_seq
 
+    def __len__(self):
+        len(self.title_input_seq)
     def __getitem__(self):
         # Define input layer
-        encoder_input_layer = Input(shape=(None,len(self)))
+        encoder_input_layer = Input(shape=(None,len(self.title_input_seq)))
         # Define LSTM layer
         encoder_ltsm_layer = LSTM(64,return_state=True)
         # Get encoded outputs,final hidden state, final cell state
@@ -37,15 +42,19 @@ class Url_Generator:
 # Import dataset
 movies_df = pd.read_csv('movies_combined.csv')
 # Get title input and URL input
-title_train_input = movies_df['Title']
-url_train_input = movies_df['URL']
-# Tokenize movie title input
-title_input_seq = [word_tokenize(word) for word in title_train_input]
+title_train_input = movies_df['Title'].tolist()
+url_train_input = movies_df['URL'].tolist()
+# Tokenize movie title input (not implemented)
 
 
+test_input = 'Lord of the Rings: Return of the King'
 
+url = Url_Generator(test_input)
 
-    
-    
+model = url.__getitem__()
 
-    
+model.compile(optimizer='adam', loss='categorical_crossentropy')
+
+model.fit([title_input_seq, url_input_seq], url_input_seq, batch_size=32, epochs=10)
+
+predicted_output = model.predict([title_input_seq, url_input_seq])
