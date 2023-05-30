@@ -64,7 +64,8 @@ class UrlFinder:
 
 def UrlPredictor(title_input):
     title = word_tokenize(title_input)
-    filtered_title = [word.lower() for word in title if word.isalpha()]
+    filter_ = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
+    filtered_title = [word.lower() for word in title if word not in filter_]
     url = '_'.join(filtered_title)
     return url
 
@@ -97,6 +98,7 @@ for url_end in urls.url_Ending:
 df.to_csv('movies_in_home.csv', index=False)
 """
 
+print(UrlPredictor('IT (2017)'))
 
 
 
