@@ -4,6 +4,7 @@ import requests
 import pandas as pd
 import time
 from nltk.tokenize import word_tokenize
+import web_scraper
 
 class MovieScraper:
     def __init__(self, url):
@@ -67,7 +68,7 @@ def UrlPredictor(title_input):
     filter_ = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
     filtered_title = [word.lower() for word in title if word not in filter_]
     url = '_'.join(filtered_title)
-    return url
+    return 'https://www.rottentomatoes.com/m/' + url
 
 
 """"
@@ -96,10 +97,18 @@ for url_end in urls.url_Ending:
     df = df._append(movie_attributes, ignore_index=True)
 
 df.to_csv('movies_in_home.csv', index=False)
+
+
+
+url_guess = UrlPredictor('IT (2017)')
+
+movie_guess = MovieScraper(url_guess)
+
+movie_guess.find_movie_attributes()
+
+print(movie_guess.movie_attributes)
+
 """
-
-print(UrlPredictor('IT (2017)'))
-
 
 
 
