@@ -28,9 +28,10 @@ class MovieScraper:
         movie_name_r = soup.find('h1',class_='title')
         movie_description = soup.find('p',{'data-qa':'movie-info-synopsis'})
 
-        self.movie_attributes['URL'] = self.url
-        self.movie_attributes['Title'] = movie_name_r.text
-        self.movie_attributes['Description'] = movie_description.text
+        if(movie_name_r != None):
+            self.movie_attributes['URL'] = self.url
+            self.movie_attributes['Title'] = movie_name_r.text
+            self.movie_attributes['Description'] = movie_description.text
 
         # forms text and adds to movie_attributes list
         for label, attribute in zip(movie_labels_r, movie_attributes_r):
