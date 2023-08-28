@@ -4,7 +4,6 @@ import requests
 import pandas as pd
 import time
 from nltk.tokenize import word_tokenize
-import web_scraper
 
 class MovieScraper:
     def __init__(self, url):
@@ -27,11 +26,13 @@ class MovieScraper:
         movie_labels_r = soup.find_all('b', class_='info-item-label')
         movie_name_r = soup.find('h1',class_='title')
         movie_description = soup.find('p',{'data-qa':'movie-info-synopsis'})
+        movie_genre = soup.find('span',class_='genre')
 
         if(movie_name_r != None):
             self.movie_attributes['URL'] = self.url
             self.movie_attributes['Title'] = movie_name_r.text
             self.movie_attributes['Description'] = movie_description.text
+            self.movie_attributes['Genre'] = movie_genre.text
 
         # forms text and adds to movie_attributes list
         for label, attribute in zip(movie_labels_r, movie_attributes_r):

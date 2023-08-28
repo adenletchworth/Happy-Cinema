@@ -57,7 +57,7 @@ def processInput(user_description: str, user_genre: str):
     most_similar_movie_descriptions = description_df[most_similar_indices].apply(str.strip)
     most_similar_movie_genres = genre_df[most_similar_indices]
 
-    return most_similar_movie_titles, most_similar_movie_descriptions, most_similar_movie_genres
+    return most_similar_movie_titles
 
 
 """"

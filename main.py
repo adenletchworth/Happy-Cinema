@@ -14,25 +14,27 @@ def movieLookup():
         movie_finder =  web_scraper.MovieScraper(guess_title)
         movie_finder.find_movie_attributes()
         if movie_finder.movie_attributes == {}:
-            notFoundDec = input('Movie Not Found, Would you like to try again y/n')
-            if notFoundDec == 'y':
+            notFoundDec = input('Movie Not Found, Would you like to try again y/n ')
+            if notFoundDec == 'n':
                 comparasion()
             else:
                 continue
         else:
-            print(movie_finder.movie_attributes)
-            nextDec = input('Is this the movie you are looking for y/n')
+            print(movie_finder.movie_attributes['Genre'],movie_finder.movie_attributes['Description'])
+            nextDec = input('Is this the movie you are looking for y/n ')
 
             if nextDec == 'y':
-                language_processing.processInput()
+                return language_processing.processInput(movie_finder.movie_attributes['Description'],movie_finder.movie_attributes['Genre'])
+                
             else:
                 continue
 
 def comparasion():
-    user_description = input("Please Enter a Description to base your Reccomendation off of")
-    user_genre = input("Please Enter a Genre to base your movie reccomendation off of")
+    user_description = input("Please Enter a Description to base your Reccomendation off of ")
+    user_genre = input("Please Enter a Genre to base your movie reccomendation off of ")
 
-    language_processing.processInput(user_description, user_genre)
+    reccomendations = language_processing.processInput(user_description, user_genre)
+    print(reccomendations)
 
 print('Hello! Welcome to the application. I will give you a movie recommendation!')
 print('We can either try to find a similar movie or you can give us a genre and description')
@@ -45,6 +47,6 @@ while not isinstance(user_dec_input, str):
         print('Please enter a valid input')
 
     if user_dec_input == 'y':
-        movieLookup()
+        print(movieLookup())
     else:
         comparasion()
