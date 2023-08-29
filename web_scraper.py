@@ -1,9 +1,9 @@
 import re
 from bs4 import BeautifulSoup
 import requests
-import pandas as pd
 import time
 from nltk.tokenize import word_tokenize
+import pandas as pd
 
 class MovieScraper:
     def __init__(self, url):
@@ -73,44 +73,37 @@ def UrlPredictor(title_input):
     return 'https://www.rottentomatoes.com/m/' + url
 
 
-""""
-url1 = 'https://www.rottentomatoes.com/browse/movies_at_home/?page=100'
-url2 = 'https://www.rottentomatoes.com/browse/movies_in_theaters/?page=100'
-url3 = 'https://www.rottentomatoes.com/browse/movies_coming_soon/'
+def refreshDatabase(urlNumber=1):
+    url = 'https://www.rottentomatoes.com/browse/movies_at_home/?page=100'
+    if urlNumber == 2:
+        url = 'https://www.rottentomatoes.com/browse/movies_in_theaters/?page=100'
+    elif urlNumber == 3:
+        url = 'https://www.rottentomatoes.com/browse/movies_coming_soon/'
 
-urls = UrlFinder(url1)
+    urls = UrlFinder(url)
 
-url_Set = urls.get()
+    urlSet = urls.get()
 
-df = pd.DataFrame()
+    url_df = pd.DataFrame()
 
-for url_end in urls.url_Ending:
-    url = 'https://www.rottentomatoes.com' + url_end
-    scrape = MovieScraper(url)
-    scrape.find_movie_attributes()
-    movie_attributes = scrape.movie_attributes
+    for url_end in urls.url_Ending:
+        current_url = 'https://www.rottentomatoes.com' + url_end
+        scrape = MovieScraper(current_url)
+        scrape.find_movie_attributes()
+        movie_attributes = scrape.movie_attributes
 
-    # Add the keys to the columns list if not already present
-    for key in movie_attributes.keys():
-        if key not in df.columns:
-            df[key] = ""
+        # Add the keys to the columns list if not already present
+        for key in movie_attributes.keys():
+            if key not in url_df.columns:
+                url_df[key] = ""
 
-    # Append the values to the corresponding columns
-    df = df._append(movie_attributes, ignore_index=True)
+        # Append the values to the corresponding columns
+        url_df = url_df._append(movie_attributes, ignore_index=True)
 
-df.to_csv('movies_in_home.csv', index=False)
+    url_df.to_csv('current_movies.csv', index=False)
 
+    
 
-
-url_guess = UrlPredictor('IT (2017)')
-
-movie_guess = MovieScraper(url_guess)
-
-movie_guess.find_movie_attributes()
-
-print(movie_guess.movie_attributes)
-
-"""
 
 
 
