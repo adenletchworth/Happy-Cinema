@@ -1,11 +1,5 @@
 import web_scraper
 import language_processing
-import time
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
 
 def movieLookup():
     while True:
