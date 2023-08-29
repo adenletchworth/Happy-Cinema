@@ -50,14 +50,14 @@ def processInput(user_description: str, user_genre: str):
     sorted_indices = weighted_scores.argsort(axis=0)[::-1].flatten()
 
     # Find the most similar movies with the highest score
-    most_similar_indices = sorted_indices[0:3]
+    most_similar_indices = sorted_indices[0]
 
     # Get the most similar movie titles, descriptions, and genres
     most_similar_movie_titles = title_df[most_similar_indices]
-    most_similar_movie_descriptions = description_df[most_similar_indices].apply(str.strip)
+    most_similar_movie_descriptions = description_df[most_similar_indices].strip()
     most_similar_movie_genres = genre_df[most_similar_indices]
 
-    return most_similar_movie_titles
+    return most_similar_movie_titles, most_similar_movie_descriptions, most_similar_movie_genres
 
 
 """"

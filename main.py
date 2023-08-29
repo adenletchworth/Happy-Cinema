@@ -49,4 +49,4 @@ while not isinstance(user_dec_input, str):
     if user_dec_input == 'y':
         print(movieLookup())
     else:
-        comparasion()
+        print(comparasion())
