@@ -8,7 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 def processInput(user_description: str, user_genre: str):
     
     # Importing movie data
-    full_movie_data = pd.read_csv('movies_combined.csv')
+    full_movie_data = pd.read_csv('current_movies.csv')
 
     # Getting features from dataframe
     description_df = full_movie_data['Description']
@@ -54,25 +54,11 @@ def processInput(user_description: str, user_genre: str):
 
     # Get the most similar movie titles, descriptions, and genres
     most_similar_movie_titles = title_df[most_similar_indices]
-    most_similar_movie_descriptions = description_df[most_similar_indices].strip()
+    most_similar_movie_descriptions = description_df[most_similar_indices].apply(str.strip)
     most_similar_movie_genres = genre_df[most_similar_indices]
 
-    return most_similar_movie_titles, most_similar_movie_descriptions, most_similar_movie_genres
+    return (most_similar_movie_titles, most_similar_movie_descriptions, most_similar_movie_genres)
 
 
-""""
-user_input = 'While exploring her new home, a girl named Coraline (Dakota Fanning) discovers a secret door, behind which lies an alternate world that closely mirrors her own but, in many ways, is better. She rejoices in her discovery, until Other Mother (Teri Hatcher) and the rest of her parallel family try to keep her there forever. Coraline must use all her resources and bravery to make it back to her own family and life.'
-user_genre = 'Kids & family, Fantasy, Animation'
 
-most_similar_movie_titles, most_similar_movie_descriptions, most_similar_movie_genres = processInput(user_input, user_genre)
-
-most_similar_results = zip(most_similar_movie_titles,most_similar_movie_descriptions,most_similar_movie_genres)
-
-for title,description,genre in most_similar_results:
-    print("Title:", title)
-    print("Description:", description)
-    print("Genre:", genre)
-    print()
-
-    """
 

@@ -41,6 +41,8 @@ while not isinstance(user_dec_input, str):
         print('Please enter a valid input')
 
     if user_dec_input == 'y':
-        print(movieLookup())
+        movies = movieLookup()
+        print(movies)
+   
     else:
         print(comparasion())

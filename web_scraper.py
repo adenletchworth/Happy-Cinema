@@ -31,8 +31,8 @@ class MovieScraper:
         if(movie_name_r != None):
             self.movie_attributes['URL'] = self.url
             self.movie_attributes['Title'] = movie_name_r.text
-            self.movie_attributes['Description'] = movie_description.text
-            self.movie_attributes['Genre'] = movie_genre.text
+            self.movie_attributes['Description'] = movie_description.text.strip()
+            self.movie_attributes['Genre'] = movie_genre.text.strip()
 
         # forms text and adds to movie_attributes list
         for label, attribute in zip(movie_labels_r, movie_attributes_r):
@@ -73,35 +73,44 @@ def UrlPredictor(title_input):
     return 'https://www.rottentomatoes.com/m/' + url
 
 
-def refreshDatabase(urlNumber=1):
-    url = 'https://www.rottentomatoes.com/browse/movies_at_home/?page=100'
-    if urlNumber == 2:
-        url = 'https://www.rottentomatoes.com/browse/movies_in_theaters/?page=100'
-    elif urlNumber == 3:
-        url = 'https://www.rottentomatoes.com/browse/movies_coming_soon/'
+def refreshDatabase():
+    url1 = 'https://www.rottentomatoes.com/browse/movies_at_home/?page=100'
+    url2 = 'https://www.rottentomatoes.com/browse/movies_in_theaters/?page=100'
 
-    urls = UrlFinder(url)
+    urls1 = UrlFinder(url1)
+    urls2 = UrlFinder(url2)
 
-    urlSet = urls.get()
+    url_Set = urls1.__getitem__()
 
-    url_df = pd.DataFrame()
+    # Create a list to store movie attributes
+    movie_data = []
 
-    for url_end in urls.url_Ending:
+    # Process urls1
+    for url_end in urls1.url_Ending:
         current_url = 'https://www.rottentomatoes.com' + url_end
         scrape = MovieScraper(current_url)
         scrape.find_movie_attributes()
         movie_attributes = scrape.movie_attributes
+        movie_data.append(movie_attributes)
 
-        # Add the keys to the columns list if not already present
-        for key in movie_attributes.keys():
-            if key not in url_df.columns:
-                url_df[key] = ""
+    # Process urls2
+    for url_end in urls2.url_Ending:
+        current_url = 'https://www.rottentomatoes.com' + url_end
+        scrape = MovieScraper(current_url)
+        scrape.find_movie_attributes()
+        movie_attributes = scrape.movie_attributes
+        movie_data.append(movie_attributes)
 
-        # Append the values to the corresponding columns
-        url_df = url_df._append(movie_attributes, ignore_index=True)
-
+    # Create a DataFrame using pd.concat
+    url_df = pd.concat([pd.Series(data) for data in movie_data], axis=1)
+    url_df = url_df.T
+    # Write the DataFrame to a CSV file
     url_df.to_csv('current_movies.csv', index=False)
 
+   
+
+
+refreshDatabase()
     
 
 
