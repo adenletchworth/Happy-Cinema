@@ -108,9 +108,6 @@ def refreshDatabase():
     url_df.to_csv('current_movies.csv', index=False)
 
    
-
-
-refreshDatabase()
     
 
 
