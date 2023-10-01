@@ -8,10 +8,11 @@ from sklearn.model_selection import train_test_split
 import torch.nn as nn
 import torch.nn.functional as F
 
-# Import Dataset
-df = pd.read_csv('FILE NAME')
+# Set Data file
+filename = ''
 
-df = df[['description','genre']]
+# Import Dataset
+df = pd.read_csv(filename)
 
 # Initialize Movie Class
 class Movie():
@@ -26,7 +27,7 @@ class Movie():
 tokenizer = AutoModel.from_pretrained('roberta-base')
 
 #Import Model (light-weight)
-bert = AutoModel.from_pretrained('roberta base')
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 
 # Pytorch Dataset
@@ -86,7 +87,7 @@ df_train, df_test = train_test_split(
   df, # Pass the df
   test_size=0.7, # 70-30 split
   random_state=2002, 
-  stratify=df['target'] # balances classes
+  stratify=df.target # balances classes
 )
 
 # Splitting test with validation set
