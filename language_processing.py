@@ -1,43 +1,42 @@
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
+
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
-def processInput(user_description: str, user_genre: str):
+
+def processInput(
+        user_description: str, 
+        user_genre: str, 
+        description_df: list,
+        genre_df: list,
+        title_df: list
+    ):
     
+    '''
+    CHANGE THIS IMPLEMENTATION CAUSING FOR SLOW CODE
     # Importing movie data
     full_movie_data = pd.read_csv('current_movies.csv')
+    
 
     # Getting features from dataframe
     description_df = full_movie_data['Description']
     title_df = full_movie_data['Title']
     genre_df = full_movie_data['Genre']
+    '''
 
-    # Getting stop words 
-    stop_words = set(stopwords.words('english'))
-    # Initializing lemmatizer class
-    lz = WordNetLemmatizer()
+    model = SentenceTransformer('all-MiniLM-L6-v2')
 
-    # Tokenizing user description input
-    input_tokens = word_tokenize(user_description)
-    # Filtering and lemmatizing the tokenized user description input
-    input_words = [lz.lemmatize(word.lower()) for word in input_tokens if word.lower() not in stop_words]
-
-    
-    model = SentenceTransformer('bert-base-nli-mean-tokens')
-
-    # Encode movie descriptions and user input
+    # Encode Movie Data fields
     encoded_descriptions = model.encode(description_df)
-    encoded_user_description = model.encode([' '.join(input_words)])
-    # Encode movie genres and user input
     encoded_genres = model.encode(genre_df)
-    encoded_user_genre = model.encode([user_genre])
+
+    # Encode User Data fields
+    encoded_user_description = model.encode(user_description)
+    encoded_user_genre = model.encode(user_genre)
 
     # Calculate cosine similarity for movie versus input
-    similarity_description_scores = cosine_similarity(encoded_descriptions, encoded_user_description)
-    similarity_genre_scores = cosine_similarity(encoded_genres, encoded_user_genre)
+    similarity_description_scores = cosine_similarity(encoded_user_description, encoded_descriptions)
+    similarity_genre_scores = cosine_similarity(encoded_user_genre, encoded_genres)
 
     # Assign weights
     description_weight = .6
