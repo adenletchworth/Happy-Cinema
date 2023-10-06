@@ -2,27 +2,27 @@
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 
 def processInput(
         user_description: str, 
         user_genre: str, 
-        description_df: list,
-        genre_df: list,
-        title_df: list
+        #description_df: list,
+        #genre_df: list,
+        #title_df: list
     ):
     
-    '''
-    CHANGE THIS IMPLEMENTATION CAUSING FOR SLOW CODE
+    
     # Importing movie data
     full_movie_data = pd.read_csv('current_movies.csv')
     
 
     # Getting features from dataframe
-    description_df = full_movie_data['Description']
-    title_df = full_movie_data['Title']
-    genre_df = full_movie_data['Genre']
-    '''
+    description_df = np.array(full_movie_data.Description)
+    title_df = np.array(full_movie_data.Title)
+    genre_df = np.array(full_movie_data.Genre)
+   
 
     model = SentenceTransformer('all-MiniLM-L6-v2')
 
@@ -35,8 +35,8 @@ def processInput(
     encoded_user_genre = model.encode(user_genre)
 
     # Calculate cosine similarity for movie versus input
-    similarity_description_scores = cosine_similarity(encoded_user_description, encoded_descriptions)
-    similarity_genre_scores = cosine_similarity(encoded_user_genre, encoded_genres)
+    similarity_description_scores = cosine_similarity(encoded_user_description.reshape(1, -1), encoded_descriptions)
+    similarity_genre_scores = cosine_similarity(encoded_user_genre.reshape(1, -1), encoded_genres)
 
     # Assign weights
     description_weight = .6
