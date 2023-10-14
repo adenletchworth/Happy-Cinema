@@ -2,59 +2,48 @@
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
+
+
+# Initialize encoding model
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
+def getSimilarity(text,user_text):
+    # Encode Texts 
+    encoded_text = model.encode(text)
+    encoded_user_text = model.encode(user_text)
+
+    # Return Cosine Similarity between texts
+    return cosine_similarity(encoded_text, encoded_user_text.reshape(1, -1))
+
+
 
 
 def processInput(
         user_description: str, 
         user_genre: str, 
-        #description_df: list,
-        #genre_df: list,
-        #title_df: list
     ):
     
     
     # Importing movie data
     full_movie_data = pd.read_csv('current_movies.csv')
-    
 
-    # Getting features from dataframe
-    description_df = np.array(full_movie_data.Description)
-    title_df = np.array(full_movie_data.Title)
-    genre_df = np.array(full_movie_data.Genre)
-   
-
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-
-    # Encode Movie Data fields
-    encoded_descriptions = model.encode(description_df)
-    encoded_genres = model.encode(genre_df)
-
-    # Encode User Data fields
-    encoded_user_description = model.encode(user_description)
-    encoded_user_genre = model.encode(user_genre)
-
-    # Calculate cosine similarity for movie versus input
-    similarity_description_scores = cosine_similarity(encoded_user_description.reshape(1, -1), encoded_descriptions)
-    similarity_genre_scores = cosine_similarity(encoded_user_genre.reshape(1, -1), encoded_genres)
+    similarity_description_scores=getSimilarity(full_movie_data.Description,user_description)
+    similarity_genre_scores=getSimilarity(full_movie_data.Genre,user_genre)
 
     # Assign weights
     description_weight = .6
     genre_weight = .4
 
     # Calculate weighted similarity scores
-    weighted_scores = (description_weight * similarity_description_scores) + (genre_weight * similarity_genre_scores)
+    full_movie_data['Weighted_Scores'] = (description_weight * similarity_description_scores) + (genre_weight * similarity_genre_scores)
 
     # Sort movies based on weighted similarity scores
-    sorted_indices = weighted_scores.argsort(axis=0)[::-1].flatten()
-
-    # Find the most similar movies with the highest score
-    most_similar_indices = sorted_indices[0]
+    max_index = full_movie_data['Weighted_Scores'].idxmax()
 
     # Get the most similar movie titles, descriptions, and genres
-    most_similar_movie_titles = title_df[most_similar_indices]
-    most_similar_movie_descriptions = description_df[most_similar_indices].strip()
-    most_similar_movie_genres = genre_df[most_similar_indices]
+    most_similar_movie_titles = full_movie_data.Title[max_index]
+    most_similar_movie_descriptions = full_movie_data.Description[max_index].strip()
+    most_similar_movie_genres = full_movie_data.Genre[max_index]
 
     return (most_similar_movie_titles, most_similar_movie_descriptions, most_similar_movie_genres)
 
