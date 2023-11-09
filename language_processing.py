@@ -43,9 +43,11 @@ def processInput(
     # Get the most similar movie titles, descriptions, and genres
     most_similar_movie_titles = full_movie_data.Title[max_index]
     most_similar_movie_descriptions = full_movie_data.Description[max_index].strip()
-    most_similar_movie_genres = full_movie_data.Genre[max_index]
+    most_similar_movie_genres = full_movie_data.Genre[max_index].split()
 
-    return (most_similar_movie_titles, most_similar_movie_descriptions, most_similar_movie_genres)
+    most_similar_genres = '  '.join(most_similar_movie_genres)
+
+    return (most_similar_movie_titles, most_similar_movie_descriptions, most_similar_genres)
 
 
 
