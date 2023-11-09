@@ -2,8 +2,8 @@ import re
 from bs4 import BeautifulSoup
 import requests
 import time
-from nltk.tokenize import word_tokenize
 import pandas as pd
+import spacy
 
 class MovieScraper:
     def __init__(self, url):
@@ -66,9 +66,9 @@ class UrlFinder:
             time.sleep(1)
 
 def UrlPredictor(title_input):
-    title = word_tokenize(title_input)
-    filter_ = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
-    filtered_title = [word.lower() for word in title if word not in filter_]
+    nlp = spacy.load("en_core_web_sm")
+    doc=nlp(title_input)
+    filtered_title = [token.text.lower() for token in doc if not token.is_punct]
     url = '_'.join(filtered_title)
     return 'https://www.rottentomatoes.com/m/' + url
 
@@ -79,8 +79,6 @@ def refreshDatabase():
 
     urls1 = UrlFinder(url1)
     urls2 = UrlFinder(url2)
-
-    url_Set = urls1.__getitem__()
 
     # Create a list to store movie attributes
     movie_data = []

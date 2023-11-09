@@ -16,8 +16,6 @@ def getSimilarity(text,user_text):
     return cosine_similarity(encoded_text, encoded_user_text.reshape(1, -1))
 
 
-
-
 def processInput(
         user_description: str, 
         user_genre: str, 
