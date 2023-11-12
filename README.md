@@ -1,10 +1,22 @@
 # Happy Cinema
 
 ## Description
-Happy Cinema is a Movie Recommendation Application. You can either search for a current movie using the search feature, or manually enter qualities of your desired movie. The application will then recommend the most similar movie that you can currently watch in theatres or at home. The project uses web scraping for the search feature which can return any movie that has existed. It also uses web scraping to create the recommended movie database however that is limited to movies at home and in theatres. The recommendation compares the similarity of both genre and description using Natural Language Processing and gives a similarity score weighted on both features. 
+**Happy Cinema** is a sophisticated Movie Recommendation Application designed to enhance your movie-watching experience. The application utilizes advanced technologies, including web scraping and Natural Language Processing (NLP), to provide accurate and personalized movie suggestions.
 
-## Usage
-Too use this application you can clone the repository. Within this repository you must run the 'gui.py' file and it will start the application.
+### Key Features
+- **Search Functionality:** Easily find information about any movie by using the search feature. Enter the exact movie name, including the release year if necessary, or refer to Rotten Tomatoes for accurate references.
+- **Web Scraping:** Happy Cinema employs web scraping to fetch real-time data about current movies in theaters and those available for home viewing.
 
-## Example
-There are two ways to use the application. One is with the search function. You would accept the search prompt and enter a movie. The movie must be the **exact** name, for example if you wanted Lord of the Rings you would have to enter 'The Lord of the Rings: The Fellowship of the Ring'. If the movie doesn't appear it's likely you must add the year since there are multiple movies with that name. If all else fails you can check rotten tomatoes and use the name they reference. If the movie is found the application will load and then return the movie reccomendation. The other function is to input your desired movie manually. For example a description would be 'I want a long twisted movie with a female lead' and genre 'Horror and Thriller'. 
+## Getting Started
+1. Clone the repository to your local machine.
+2. Run the `app.py` file.
+3. Access the application by navigating to `localhost:5000` in your web browser.
+
+## Example Usage
+### Search Function:
+1. Accept the search prompt.
+2. Enter the exact movie name (consider adding the release year if needed).
+3. If the movie is found, the application will load, providing a personalized movie recommendation.
+
+
+Enjoy your movie recommendations with Happy Cinema! 🎬🍿
