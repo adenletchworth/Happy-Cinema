@@ -2,96 +2,51 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<style>
-    body {
-        font-family: 'Helvetica', sans-serif; /* Change the font to Helvetica */
-        background-color: #800000; /* Maroon background color */
-    }
-
-    .content {
-        width: 50%;
-        margin: auto;
-        text-align: center;
-        background-image: url('/static/Images/Background.png');
-        background-size: cover;
-        background-position: center;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        background-color: rgba(255, 255, 255, 0.8); /* Light background color for the box */
-    }
-
-    h1 {
-        color: #FFD700; /* Change the text color to gold */
-        margin-bottom: 20px;
-        font-size: 36px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-        background-color: white; /* Set a white background color for the table */
-    }
-
-    th,
-    td {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
-
-    tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    input[type="text"] {
-        width: 60%;
-        padding: 10px;
-        margin-top: 20px;
-        border: 1px solid #ddd; /* Add a border to the input box */
-    }
-
-    input[type="submit"] {
-        padding: 10px 20px;
-        background-color: #FFD700;
-        color: black;
-        border: none;
-        cursor: pointer;
-        margin-top: 20px;
-        border-radius: 5px;
-        font-weight: bold;
-        transition: background-color 0.3s;
-    }
-
-    input[type="submit"]:hover {
-        background-color: #FFA500;
-    }
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
-<div class="content">
+<div class="header">
     <h1>Happy Cinema</h1>
-
-    <form action="/" method="POST">
-        <input type="text" name="title" id="userTitle" placeholder="Enter movie title...">
-        <input type="submit" value="Find Movie">
-    </form>
-
-    {% if movie %}
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Genre</th>
-        </tr>
-        <tr>
-            <td>{{ movie[0] }}</td>
-            <td>{{ movie[1] }}</td>
-            <td>{{ movie[2] }}</td>
-        </tr>
-    </table>
-    {% endif %}
+    <img src="../static/Images/popcorn.svg" class="popcorn">
 </div>
+<div class="container">
+    <div class="container-header">
+        <h1>Discover Fresh Cinema a New Movie Experience</h1>
+    </div>
+    <div class="container-subheader">
+        <p>
+            Enter a movie title, and unlock a world of tailored recommendations. Our intelligent algorithm analyzes your favorite films, suggesting a handpicked selection that matches your taste. Dive into a personalized movie journey, discovering new favorites based on what you love
+        </p>
+    </div>
+    <div class="input">
+        <form action="/" method="POST">
+            <input type="text" name="title" class="userTitle" placeholder="Enter movie title...">
+        </form>
+    </div>
+    {% if movie %}
+    <div class="title">
+        <h1>{{ movie[0] }}</h1>
+    </div>
+    <div class="movie-info">
+        <div class="title-genre">
+            <ul>
+                <li>
+                    Genre: {{ movie[2] }}
+                </li>
+            </ul>
+        </div>
+        <div class="description">
+            <ul>
+                <li>
+                    Description: {{ movie[1] }}
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+
+</div>
+    {% endif %}
 {% endblock %}
